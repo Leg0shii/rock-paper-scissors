@@ -39,20 +39,50 @@ function playRound(playerSelection, computerSelection) {
 
 function game() {
     let playerScore = 0;
+    let computerScore = 0;
 
-    for (let i = 0; i < 5; i++) {
-        let playerSelection = prompt("Enter your guess: 'rock', 'paper', 'scissor'!");
-        let computerSelection = getComputerChoice();
+    const actionButtons = document.querySelectorAll('.action-button');
+    actionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const playerSelection = btn.id;
+            const computerSelection = getComputerChoice();
 
-        let result = playRound(playerSelection, computerSelection);
-        let winnerResult = result[0];
-        let messageResult = result[1];
+            let result = playRound(playerSelection, computerSelection);
+            let winnerResult = result[0];
+            let messageResult = result[1];
 
-        playerScore = playerScore + winnerResult;
-        console.log('Round ' + (i+1) + '. ' + messageResult);
-    }
+            playerScore = playerScore + winnerResult;
+            computerScore = computerScore + (2-winnerResult);
+
+            const resultDiv = document.getElementById("result");
+            const finalResultDiv = document.getElementById("final-result");
+            const playerDiv = document.getElementById("player-score");
+            const compterDiv = document.getElementById("computer-score");
+
+            let parsedPlayerScore = Number.parseInt(Math.floor(playerScore/2));
+            let parsedComputerScore = Number.parseInt(Math.floor(computerScore/2));
+
+            resultDiv.textContent = messageResult;
+            playerDiv.textContent = "Player: " + parsedPlayerScore;
+            compterDiv.textContent = "Computer: " + parsedComputerScore;
+
+            if (parsedPlayerScore != 5 && parsedComputerScore != 5) return;
+        
+            if (playerScore == 5) finalResultDiv.textContent = "It's a Tie! :|";
+            if (playerScore < 5) finalResultDiv.textContent = "You have Lost with a total of " + parsedPlayerScore + "/5 points! :(";
+            if (playerScore > 5) finalResultDiv.textContent = "You have Won with a total of " + parsedPlayerScore + "/5 points! :)";
+
+            playerScore = 0;
+            computerScore = 0;
+            
+        });
+    });
+
+    /*playerScore = playerScore + winnerResult;
+    console.log('Round ' + (i+1) + '. ' + messageResult);
 
     if (playerScore == 5) console.log("It's a Tie! :|");
     if (playerScore < 5) console.log("You have Lost with a total of " + playerScore + "/10 points! :(");
-    if (playerScore > 5) console.log("You have Won with a total of " + playerScore + "/10 points! :)");
+    if (playerScore > 5) console.log("You have Won with a total of " + playerScore + "/10 points! :)");*/
 }
+
